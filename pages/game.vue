@@ -18,9 +18,11 @@ const { state, inputLetter, backspace, submit, reset } = useWordle()
 const remaining = ref(120) // seconds
 let timerId: any = null
 
-const dangerActive = computed(() => isPro && state.status === 'playing' && remaining.value <= 10 && remaining.value > 0)
-
 const showQuitConfirm = ref(false)
+const showNewConfirm = ref(false)
+
+const paused = computed(() => isPro && state.status === 'playing' && (showQuitConfirm.value || showNewConfirm.value))
+const dangerActive = computed(() => isPro && state.status === 'playing' && !paused.value && remaining.value <= 10 && remaining.value > 0)
 
 function formatTime(s: number) {
   const m = Math.floor(s / 60).toString().padStart(2, '0')
@@ -32,10 +34,10 @@ function stopTimer() {
   if (timerId) { clearInterval(timerId); timerId = null }
 }
 
-function startTimer() {
+function startTimer(resetTime = true) {
   if (!isPro) return
   stopTimer()
-  remaining.value = 120
+  if (resetTime) remaining.value = 120
   timerId = setInterval(() => {
     if (state.status !== 'playing') return
     remaining.value = Math.max(0, remaining.value - 1)
@@ -51,6 +53,9 @@ function startTimer() {
     }
   }, 1000)
 }
+
+function pauseTimer() { if (isPro) stopTimer() }
+function resumeTimer() { if (isPro && state.status === 'playing' && !timerId) startTimer(false) }
 
 function onKey(key: string) {
   if (key === 'ENTER') return submit()
@@ -74,12 +79,33 @@ function onNew() {
 }
 
 function onMenu() {
+  pauseTimer()
   showQuitConfirm.value = true
 }
 
 function confirmQuit() {
   showQuitConfirm.value = false
   router.push({ path: '/', replace: true })
+}
+
+function cancelQuit() {
+  showQuitConfirm.value = false
+  resumeTimer()
+}
+
+function onNewClick() {
+  pauseTimer()
+  showNewConfirm.value = true
+}
+
+function confirmNew() {
+  showNewConfirm.value = false
+  onNew()
+}
+
+function cancelNew() {
+  showNewConfirm.value = false
+  resumeTimer()
 }
 </script>
 
@@ -92,16 +118,21 @@ function confirmQuit() {
         <span v-if="isPro" class="ml-2 text-sm px-2 py-1 rounded bg-absent text-white">PRO</span>
       </div>
       <div class="flex items-center gap-3">
-        <div
-          v-if="isPro"
-          class="text-lg font-mono tabular-nums px-2 py-1 rounded border"
-          :class="dangerActive
-            ? 'bg-red-600 text-white border-red-500 animate-pulse'
-            : 'bg-tile text-gray-100 border-gray-700'"
-        >
-          {{ formatTime(remaining) }}
+        <div v-if="isPro" class="relative">
+          <div
+            class="text-lg font-mono tabular-nums px-2 py-1 rounded border"
+            :class="dangerActive
+              ? 'bg-red-600 text-white border-red-500 animate-pulse'
+              : 'bg-tile text-gray-100 border-gray-700'"
+          >
+            {{ formatTime(remaining) }}
+          </div>
+          <span
+            v-if="paused"
+            class="absolute -top-2 -right-2 text-[10px] sm:text-xs px-2 py-0.5 rounded bg-gray-700 text-gray-100 border border-gray-600 uppercase tracking-wide"
+          >Paused</span>
         </div>
-        <button class="text-sm bg-correct hover:bg-green-600 px-3 py-1.5 rounded" @click="onNew()">New</button>
+        <button class="text-sm bg-correct hover:bg-green-600 px-3 py-1.5 rounded" @click="onNewClick">New</button>
       </div>
     </header>
 
@@ -129,7 +160,17 @@ function confirmQuit() {
         confirm-text="Quit"
         cancel-text="Stay"
         @confirm="confirmQuit"
-        @cancel="showQuitConfirm = false"
+        @cancel="cancelQuit"
+      />
+
+      <ConfirmModal
+        :show="showNewConfirm"
+        title="Start New Game?"
+        message="Current progress will be lost."
+        confirm-text="New Game"
+        cancel-text="Cancel"
+        @confirm="confirmNew"
+        @cancel="cancelNew"
       />
 
       <WordleKeyboard :key-state="state.keyboard" @key="onKey" />

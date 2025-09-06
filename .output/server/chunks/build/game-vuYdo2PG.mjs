@@ -1599,8 +1599,10 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     const { state, inputLetter, backspace, submit, reset } = useWordle();
     const remaining = ref(120);
     let timerId = null;
-    const dangerActive = computed(() => isPro && state.status === "playing" && remaining.value <= 10 && remaining.value > 0);
     const showQuitConfirm = ref(false);
+    const showNewConfirm = ref(false);
+    const paused = computed(() => isPro && state.status === "playing" && (showQuitConfirm.value || showNewConfirm.value));
+    const dangerActive = computed(() => isPro && state.status === "playing" && !paused.value && remaining.value <= 10 && remaining.value > 0);
     function formatTime(s) {
       const m = Math.floor(s / 60).toString().padStart(2, "0");
       const sec = Math.floor(s % 60).toString().padStart(2, "0");
@@ -1612,11 +1614,14 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
         timerId = null;
       }
     }
-    function startTimer() {
+    function startTimer(resetTime = true) {
       if (!isPro) return;
       stopTimer();
-      remaining.value = 120;
+      if (resetTime) remaining.value = 120;
       timerId = setInterval();
+    }
+    function resumeTimer() {
+      if (isPro && state.status === "playing" && !timerId) startTimer(false);
     }
     function onKey(key) {
       if (key === "ENTER") return submit();
@@ -1634,26 +1639,44 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       showQuitConfirm.value = false;
       router.push({ path: "/", replace: true });
     }
+    function cancelQuit() {
+      showQuitConfirm.value = false;
+      resumeTimer();
+    }
+    function confirmNew() {
+      showNewConfirm.value = false;
+      onNew();
+    }
+    function cancelNew() {
+      showNewConfirm.value = false;
+      resumeTimer();
+    }
     return (_ctx, _push, _parent, _attrs) => {
-      _push(`<div${ssrRenderAttrs(mergeProps({ class: "flex flex-col items-center px-4 pt-6 safe-bottom" }, _attrs))} data-v-3c850bbe><header class="w-full max-w-xl flex items-center justify-between mb-4" data-v-3c850bbe><div class="flex items-center gap-3" data-v-3c850bbe><button class="text-sm bg-absent hover:bg-gray-600 px-2 py-1 rounded" data-v-3c850bbe>Menu</button><h1 class="text-xl sm:text-2xl font-extrabold tracking-wide" data-v-3c850bbe>Wordle</h1>`);
+      _push(`<div${ssrRenderAttrs(mergeProps({ class: "flex flex-col items-center px-4 pt-6 safe-bottom" }, _attrs))} data-v-de184802><header class="w-full max-w-xl flex items-center justify-between mb-4" data-v-de184802><div class="flex items-center gap-3" data-v-de184802><button class="text-sm bg-absent hover:bg-gray-600 px-2 py-1 rounded" data-v-de184802>Menu</button><h1 class="text-xl sm:text-2xl font-extrabold tracking-wide" data-v-de184802>Wordle</h1>`);
       if (isPro) {
-        _push(`<span class="ml-2 text-sm px-2 py-1 rounded bg-absent text-white" data-v-3c850bbe>PRO</span>`);
+        _push(`<span class="ml-2 text-sm px-2 py-1 rounded bg-absent text-white" data-v-de184802>PRO</span>`);
       } else {
         _push(`<!---->`);
       }
-      _push(`</div><div class="flex items-center gap-3" data-v-3c850bbe>`);
+      _push(`</div><div class="flex items-center gap-3" data-v-de184802>`);
       if (isPro) {
-        _push(`<div class="${ssrRenderClass([unref(dangerActive) ? "bg-red-600 text-white border-red-500 animate-pulse" : "bg-tile text-gray-100 border-gray-700", "text-lg font-mono tabular-nums px-2 py-1 rounded border"])}" data-v-3c850bbe>${ssrInterpolate(formatTime(unref(remaining)))}</div>`);
+        _push(`<div class="relative" data-v-de184802><div class="${ssrRenderClass([unref(dangerActive) ? "bg-red-600 text-white border-red-500 animate-pulse" : "bg-tile text-gray-100 border-gray-700", "text-lg font-mono tabular-nums px-2 py-1 rounded border"])}" data-v-de184802>${ssrInterpolate(formatTime(unref(remaining)))}</div>`);
+        if (unref(paused)) {
+          _push(`<span class="absolute -top-2 -right-2 text-[10px] sm:text-xs px-2 py-0.5 rounded bg-gray-700 text-gray-100 border border-gray-600 uppercase tracking-wide" data-v-de184802>Paused</span>`);
+        } else {
+          _push(`<!---->`);
+        }
+        _push(`</div>`);
       } else {
         _push(`<!---->`);
       }
-      _push(`<button class="text-sm bg-correct hover:bg-green-600 px-3 py-1.5 rounded" data-v-3c850bbe>New</button></div></header><main class="w-full flex flex-col gap-4 items-center" data-v-3c850bbe>`);
+      _push(`<button class="text-sm bg-correct hover:bg-green-600 px-3 py-1.5 rounded" data-v-de184802>New</button></div></header><main class="w-full flex flex-col gap-4 items-center" data-v-de184802>`);
       _push(ssrRenderComponent(WordleBoard, {
         board: unref(state).board,
         "current-row": unref(state).currentRow
       }, null, _parent));
       if (unref(state).message) {
-        _push(`<div class="fixed top-4 left-1/2 -translate-x-1/2 bg-tile text-white px-4 py-2 rounded shadow" data-v-3c850bbe>${ssrInterpolate(unref(state).message)}</div>`);
+        _push(`<div class="fixed top-4 left-1/2 -translate-x-1/2 bg-tile text-white px-4 py-2 rounded shadow" data-v-de184802>${ssrInterpolate(unref(state).message)}</div>`);
       } else {
         _push(`<!---->`);
       }
@@ -1671,7 +1694,16 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
         "confirm-text": "Quit",
         "cancel-text": "Stay",
         onConfirm: confirmQuit,
-        onCancel: ($event) => showQuitConfirm.value = false
+        onCancel: cancelQuit
+      }, null, _parent));
+      _push(ssrRenderComponent(ConfirmModal, {
+        show: unref(showNewConfirm),
+        title: "Start New Game?",
+        message: "Current progress will be lost.",
+        "confirm-text": "New Game",
+        "cancel-text": "Cancel",
+        onConfirm: confirmNew,
+        onCancel: cancelNew
       }, null, _parent));
       _push(ssrRenderComponent(WordleKeyboard, {
         "key-state": unref(state).keyboard,
@@ -1687,7 +1719,7 @@ _sfc_main.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/game.vue");
   return _sfc_setup ? _sfc_setup(props, ctx) : void 0;
 };
-const game = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-3c850bbe"]]);
+const game = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-de184802"]]);
 
 export { game as default };
-//# sourceMappingURL=game-DA18fv0r.mjs.map
+//# sourceMappingURL=game-vuYdo2PG.mjs.map
