@@ -84,5 +84,9 @@ export function useSounds() {
     seq.forEach((f, i) => setTimeout(() => tone(f, 180, 'triangle', 0.06), i * 170))
     vibrate([40, 40, 40])
   }
-  return { click, backspace, error, win, lose }
+  function dangerTick() {
+    tone(900, 120, 'square', 0.05)
+    vibrate(20)
+  }
+  return { click, backspace, error, win, lose, dangerTick }
 }
