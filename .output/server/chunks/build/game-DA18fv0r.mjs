@@ -17,7 +17,7 @@ import 'devalue';
 import 'unhead/utils';
 import 'vue-router';
 
-const _sfc_main$3 = /* @__PURE__ */ defineComponent({
+const _sfc_main$4 = /* @__PURE__ */ defineComponent({
   __name: "WordleBoard",
   __ssrInlineRender: true,
   props: {
@@ -43,14 +43,14 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _sfc_setup$3 = _sfc_main$3.setup;
-_sfc_main$3.setup = (props, ctx) => {
+const _sfc_setup$4 = _sfc_main$4.setup;
+_sfc_main$4.setup = (props, ctx) => {
   const ssrContext = useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/WordleBoard.vue");
-  return _sfc_setup$3 ? _sfc_setup$3(props, ctx) : void 0;
+  return _sfc_setup$4 ? _sfc_setup$4(props, ctx) : void 0;
 };
-const WordleBoard = Object.assign(_sfc_main$3, { __name: "WordleBoard" });
-const _sfc_main$2 = /* @__PURE__ */ defineComponent({
+const WordleBoard = Object.assign(_sfc_main$4, { __name: "WordleBoard" });
+const _sfc_main$3 = /* @__PURE__ */ defineComponent({
   __name: "WordleKeyboard",
   __ssrInlineRender: true,
   props: {
@@ -80,14 +80,14 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _sfc_setup$2 = _sfc_main$2.setup;
-_sfc_main$2.setup = (props, ctx) => {
+const _sfc_setup$3 = _sfc_main$3.setup;
+_sfc_main$3.setup = (props, ctx) => {
   const ssrContext = useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/WordleKeyboard.vue");
-  return _sfc_setup$2 ? _sfc_setup$2(props, ctx) : void 0;
+  return _sfc_setup$3 ? _sfc_setup$3(props, ctx) : void 0;
 };
-const WordleKeyboard = Object.assign(_sfc_main$2, { __name: "WordleKeyboard" });
-const _sfc_main$1 = /* @__PURE__ */ defineComponent({
+const WordleKeyboard = Object.assign(_sfc_main$3, { __name: "WordleKeyboard" });
+const _sfc_main$2 = /* @__PURE__ */ defineComponent({
   __name: "ResultModal",
   __ssrInlineRender: true,
   props: {
@@ -108,13 +108,13 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _sfc_setup$1 = _sfc_main$1.setup;
-_sfc_main$1.setup = (props, ctx) => {
+const _sfc_setup$2 = _sfc_main$2.setup;
+_sfc_main$2.setup = (props, ctx) => {
   const ssrContext = useSSRContext();
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/ResultModal.vue");
-  return _sfc_setup$1 ? _sfc_setup$1(props, ctx) : void 0;
+  return _sfc_setup$2 ? _sfc_setup$2(props, ctx) : void 0;
 };
-const ResultModal = /* @__PURE__ */ Object.assign(_export_sfc(_sfc_main$1, [["__scopeId", "data-v-8ac7bc41"]]), { __name: "ResultModal" });
+const ResultModal = /* @__PURE__ */ Object.assign(_export_sfc(_sfc_main$2, [["__scopeId", "data-v-8ac7bc41"]]), { __name: "ResultModal" });
 const WORDS = [
   "about",
   "above",
@@ -1554,6 +1554,36 @@ function useWordle() {
   }
   return { state, inputLetter, backspace, submit, reset };
 }
+const _sfc_main$1 = /* @__PURE__ */ defineComponent({
+  __name: "ConfirmModal",
+  __ssrInlineRender: true,
+  props: {
+    show: { type: Boolean },
+    title: {},
+    message: {},
+    confirmText: {},
+    cancelText: {}
+  },
+  emits: ["confirm", "cancel"],
+  setup(__props, { emit: __emit }) {
+    return (_ctx, _push, _parent, _attrs) => {
+      ssrRenderTeleport(_push, (_push2) => {
+        if (_ctx.show) {
+          _push2(`<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4" data-v-2fcf49c4><div class="w-full max-w-sm bg-tile rounded-lg border border-gray-700 shadow-xl p-4 sm:p-6 text-gray-100" data-v-2fcf49c4><div class="text-center" data-v-2fcf49c4><h2 class="text-xl font-bold mb-2" data-v-2fcf49c4>${ssrInterpolate(_ctx.title || "Are you sure?")}</h2><p class="text-sm text-gray-300 mb-6" data-v-2fcf49c4>${ssrInterpolate(_ctx.message || "This action cannot be undone.")}</p><div class="flex gap-2 justify-center" data-v-2fcf49c4><button class="px-4 py-2 rounded bg-absent text-white" data-v-2fcf49c4>${ssrInterpolate(_ctx.cancelText || "Cancel")}</button><button class="px-4 py-2 rounded bg-red-600 hover:bg-red-700 text-white font-semibold" data-v-2fcf49c4>${ssrInterpolate(_ctx.confirmText || "Confirm")}</button></div></div></div></div>`);
+        } else {
+          _push2(`<!---->`);
+        }
+      }, "body", false, _parent);
+    };
+  }
+});
+const _sfc_setup$1 = _sfc_main$1.setup;
+_sfc_main$1.setup = (props, ctx) => {
+  const ssrContext = useSSRContext();
+  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/ConfirmModal.vue");
+  return _sfc_setup$1 ? _sfc_setup$1(props, ctx) : void 0;
+};
+const ConfirmModal = /* @__PURE__ */ Object.assign(_export_sfc(_sfc_main$1, [["__scopeId", "data-v-2fcf49c4"]]), { __name: "ConfirmModal" });
 const intervalError = "[nuxt] `setInterval` should not be used on the server. Consider wrapping it with an `onNuxtReady`, `onBeforeMount` or `onMounted` lifecycle hook, or ensure you only call it in the browser by checking `false`.";
 const setInterval = () => {
   console.error(intervalError);
@@ -1563,13 +1593,14 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
   __ssrInlineRender: true,
   setup(__props) {
     const route = useRoute();
-    useRouter();
+    const router = useRouter();
     const mode = route.query.mode === "pro" ? "pro" : "easy";
     const isPro = mode === "pro";
     const { state, inputLetter, backspace, submit, reset } = useWordle();
     const remaining = ref(120);
     let timerId = null;
     const dangerActive = computed(() => isPro && state.status === "playing" && remaining.value <= 10 && remaining.value > 0);
+    const showQuitConfirm = ref(false);
     function formatTime(s) {
       const m = Math.floor(s / 60).toString().padStart(2, "0");
       const sec = Math.floor(s % 60).toString().padStart(2, "0");
@@ -1599,26 +1630,30 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       reset();
       if (isPro) startTimer();
     }
+    function confirmQuit() {
+      showQuitConfirm.value = false;
+      router.push({ path: "/", replace: true });
+    }
     return (_ctx, _push, _parent, _attrs) => {
-      _push(`<div${ssrRenderAttrs(mergeProps({ class: "flex flex-col items-center px-4 pt-6 safe-bottom" }, _attrs))} data-v-9ee99213><header class="w-full max-w-xl flex items-center justify-between mb-4" data-v-9ee99213><div class="flex items-center gap-3" data-v-9ee99213><button class="text-sm bg-absent hover:bg-gray-600 px-2 py-1 rounded" data-v-9ee99213>Menu</button><h1 class="text-xl sm:text-2xl font-extrabold tracking-wide" data-v-9ee99213>Wordle</h1>`);
+      _push(`<div${ssrRenderAttrs(mergeProps({ class: "flex flex-col items-center px-4 pt-6 safe-bottom" }, _attrs))} data-v-3c850bbe><header class="w-full max-w-xl flex items-center justify-between mb-4" data-v-3c850bbe><div class="flex items-center gap-3" data-v-3c850bbe><button class="text-sm bg-absent hover:bg-gray-600 px-2 py-1 rounded" data-v-3c850bbe>Menu</button><h1 class="text-xl sm:text-2xl font-extrabold tracking-wide" data-v-3c850bbe>Wordle</h1>`);
       if (isPro) {
-        _push(`<span class="ml-2 text-sm px-2 py-1 rounded bg-absent text-white" data-v-9ee99213>PRO</span>`);
+        _push(`<span class="ml-2 text-sm px-2 py-1 rounded bg-absent text-white" data-v-3c850bbe>PRO</span>`);
       } else {
         _push(`<!---->`);
       }
-      _push(`</div><div class="flex items-center gap-3" data-v-9ee99213>`);
+      _push(`</div><div class="flex items-center gap-3" data-v-3c850bbe>`);
       if (isPro) {
-        _push(`<div class="${ssrRenderClass([unref(dangerActive) ? "bg-red-600 text-white border-red-500 animate-pulse" : "bg-tile text-gray-100 border-gray-700", "text-lg font-mono tabular-nums px-2 py-1 rounded border"])}" data-v-9ee99213>${ssrInterpolate(formatTime(unref(remaining)))}</div>`);
+        _push(`<div class="${ssrRenderClass([unref(dangerActive) ? "bg-red-600 text-white border-red-500 animate-pulse" : "bg-tile text-gray-100 border-gray-700", "text-lg font-mono tabular-nums px-2 py-1 rounded border"])}" data-v-3c850bbe>${ssrInterpolate(formatTime(unref(remaining)))}</div>`);
       } else {
         _push(`<!---->`);
       }
-      _push(`<button class="text-sm bg-correct hover:bg-green-600 px-3 py-1.5 rounded" data-v-9ee99213>New</button></div></header><main class="w-full flex flex-col gap-4 items-center" data-v-9ee99213>`);
+      _push(`<button class="text-sm bg-correct hover:bg-green-600 px-3 py-1.5 rounded" data-v-3c850bbe>New</button></div></header><main class="w-full flex flex-col gap-4 items-center" data-v-3c850bbe>`);
       _push(ssrRenderComponent(WordleBoard, {
         board: unref(state).board,
         "current-row": unref(state).currentRow
       }, null, _parent));
       if (unref(state).message) {
-        _push(`<div class="fixed top-4 left-1/2 -translate-x-1/2 bg-tile text-white px-4 py-2 rounded shadow" data-v-9ee99213>${ssrInterpolate(unref(state).message)}</div>`);
+        _push(`<div class="fixed top-4 left-1/2 -translate-x-1/2 bg-tile text-white px-4 py-2 rounded shadow" data-v-3c850bbe>${ssrInterpolate(unref(state).message)}</div>`);
       } else {
         _push(`<!---->`);
       }
@@ -1628,6 +1663,15 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
         answer: unref(state).answer,
         onAgain: ($event) => onNew(),
         onClose: ($event) => unref(reset)(false)
+      }, null, _parent));
+      _push(ssrRenderComponent(ConfirmModal, {
+        show: unref(showQuitConfirm),
+        title: "Quit to Menu?",
+        message: "Your current game will be lost.",
+        "confirm-text": "Quit",
+        "cancel-text": "Stay",
+        onConfirm: confirmQuit,
+        onCancel: ($event) => showQuitConfirm.value = false
       }, null, _parent));
       _push(ssrRenderComponent(WordleKeyboard, {
         "key-state": unref(state).keyboard,
@@ -1643,7 +1687,7 @@ _sfc_main.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/game.vue");
   return _sfc_setup ? _sfc_setup(props, ctx) : void 0;
 };
-const game = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-9ee99213"]]);
+const game = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-3c850bbe"]]);
 
 export { game as default };
-//# sourceMappingURL=game-B9FzQ4u5.mjs.map
+//# sourceMappingURL=game-DA18fv0r.mjs.map

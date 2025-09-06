@@ -14,7 +14,8 @@ type HydrationStrategies = {
 type LazyComponent<T> = (T & DefineComponent<HydrationStrategies, {}, {}, {}, {}, {}, {}, { hydrated: () => void }>)
 
 interface _GlobalComponents {
-      'ResultModal': typeof import("../../components/ResultModal.vue")['default']
+      'ConfirmModal': typeof import("../../components/ConfirmModal.vue")['default']
+    'ResultModal': typeof import("../../components/ResultModal.vue")['default']
     'WordleBoard': typeof import("../../components/WordleBoard.vue")['default']
     'WordleKeyboard': typeof import("../../components/WordleKeyboard.vue")['default']
     'NuxtWelcome': typeof import("../../node_modules/nuxt/dist/app/components/welcome.vue")['default']
@@ -41,7 +42,8 @@ interface _GlobalComponents {
     'Body': typeof import("../../node_modules/nuxt/dist/head/runtime/components")['Body']
     'NuxtIsland': typeof import("../../node_modules/nuxt/dist/app/components/nuxt-island")['default']
     'NuxtRouteAnnouncer': typeof import("../../node_modules/nuxt/dist/app/components/server-placeholder")['default']
-      'LazyResultModal': LazyComponent<typeof import("../../components/ResultModal.vue")['default']>
+      'LazyConfirmModal': LazyComponent<typeof import("../../components/ConfirmModal.vue")['default']>
+    'LazyResultModal': LazyComponent<typeof import("../../components/ResultModal.vue")['default']>
     'LazyWordleBoard': LazyComponent<typeof import("../../components/WordleBoard.vue")['default']>
     'LazyWordleKeyboard': LazyComponent<typeof import("../../components/WordleKeyboard.vue")['default']>
     'LazyNuxtWelcome': LazyComponent<typeof import("../../node_modules/nuxt/dist/app/components/welcome.vue")['default']>

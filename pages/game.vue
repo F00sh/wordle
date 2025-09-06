@@ -5,6 +5,7 @@ import ResultModal from '@/components/ResultModal.vue'
 import { useWordle } from '@/composables/useWordle'
 import { useRoute, useRouter } from '#imports'
 import { useSounds } from '@/composables/useSounds'
+import ConfirmModal from '@/components/ConfirmModal.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -18,6 +19,8 @@ const remaining = ref(120) // seconds
 let timerId: any = null
 
 const dangerActive = computed(() => isPro && state.status === 'playing' && remaining.value <= 10 && remaining.value > 0)
+
+const showQuitConfirm = ref(false)
 
 function formatTime(s: number) {
   const m = Math.floor(s / 60).toString().padStart(2, '0')
@@ -69,13 +72,22 @@ function onNew() {
   reset()
   if (isPro) startTimer()
 }
+
+function onMenu() {
+  showQuitConfirm.value = true
+}
+
+function confirmQuit() {
+  showQuitConfirm.value = false
+  router.push({ path: '/', replace: true })
+}
 </script>
 
 <template>
   <div class="flex flex-col items-center px-4 pt-6 safe-bottom">
     <header class="w-full max-w-xl flex items-center justify-between mb-4">
       <div class="flex items-center gap-3">
-        <button class="text-sm bg-absent hover:bg-gray-600 px-2 py-1 rounded" @click="router.push({ path: '/', replace: true })">Menu</button>
+        <button class="text-sm bg-absent hover:bg-gray-600 px-2 py-1 rounded" @click="onMenu">Menu</button>
         <h1 class="text-xl sm:text-2xl font-extrabold tracking-wide">Wordle</h1>
         <span v-if="isPro" class="ml-2 text-sm px-2 py-1 rounded bg-absent text-white">PRO</span>
       </div>
@@ -108,6 +120,16 @@ function onNew() {
         :answer="state.answer"
         @again="onNew()"
         @close="reset(false)"
+      />
+
+      <ConfirmModal
+        :show="showQuitConfirm"
+        title="Quit to Menu?"
+        message="Your current game will be lost."
+        confirm-text="Quit"
+        cancel-text="Stay"
+        @confirm="confirmQuit"
+        @cancel="showQuitConfirm = false"
       />
 
       <WordleKeyboard :key-state="state.keyboard" @key="onKey" />
