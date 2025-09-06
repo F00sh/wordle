@@ -69,7 +69,7 @@ const client_manifest = {
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "CbXCk51j.js",
+    "file": "Bxu5tOkW.js",
     "name": "entry",
     "src": "node_modules/nuxt/dist/app/entry.js",
     "isEntry": true,
@@ -78,11 +78,11 @@ const client_manifest = {
       "node_modules/nuxt/dist/app/components/error-500.vue"
     ],
     "css": [
-      "entry.BEULj3U7.css"
+      "entry.MPTdCvVb.css"
     ]
   },
-  "entry.BEULj3U7.css": {
-    "file": "entry.BEULj3U7.css",
+  "entry.MPTdCvVb.css": {
+    "file": "entry.MPTdCvVb.css",
     "resourceType": "style",
     "prefetch": true,
     "preload": true
@@ -92,7 +92,7 @@ const client_manifest = {
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "Duyg8xsq.js",
+    "file": "rWAp4nJE.js",
     "name": "game",
     "src": "pages/game.vue",
     "isDynamicEntry": true,
@@ -101,8 +101,8 @@ const client_manifest = {
     ],
     "css": []
   },
-  "game.D912wwU-.css": {
-    "file": "game.D912wwU-.css",
+  "game.aXkkwP3V.css": {
+    "file": "game.aXkkwP3V.css",
     "resourceType": "style",
     "prefetch": true,
     "preload": true
@@ -112,7 +112,7 @@ const client_manifest = {
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "CKqVGoFD.js",
+    "file": "BniJvAKT.js",
     "name": "index",
     "src": "pages/index.vue",
     "isDynamicEntry": true,

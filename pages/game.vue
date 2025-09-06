@@ -14,7 +14,7 @@ const sounds = useSounds()
 
 const { state, inputLetter, backspace, submit, reset } = useWordle()
 
-const remaining = ref(180) // seconds
+const remaining = ref(120) // seconds
 let timerId: any = null
 
 const dangerActive = computed(() => isPro && state.status === 'playing' && remaining.value <= 10 && remaining.value > 0)
@@ -32,7 +32,7 @@ function stopTimer() {
 function startTimer() {
   if (!isPro) return
   stopTimer()
-  remaining.value = 180
+  remaining.value = 120
   timerId = setInterval(() => {
     if (state.status !== 'playing') return
     remaining.value = Math.max(0, remaining.value - 1)

@@ -26,7 +26,7 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
   },
   setup(__props) {
     return (_ctx, _push, _parent, _attrs) => {
-      _push(`<div${ssrRenderAttrs(mergeProps({ class: "grid grid-rows-5 gap-2 w-full max-w-xs sm:max-w-sm mx-auto" }, _attrs))}><!--[-->`);
+      _push(`<div${ssrRenderAttrs(mergeProps({ class: "grid gap-2 w-full max-w-xs sm:max-w-sm mx-auto" }, _attrs))}><!--[-->`);
       ssrRenderList(_ctx.board, (row, rIdx) => {
         _push(`<div class="grid grid-cols-5 gap-2"><!--[-->`);
         ssrRenderList(row.letters, (cell, cIdx) => {
@@ -1415,7 +1415,7 @@ function useSounds() {
   }
   return { click, backspace, error, win, lose, dangerTick };
 }
-const ROWS = 5;
+const ROWS = 6;
 const COLS = 5;
 function normalizeWord(w) {
   return w.trim().toLowerCase();
@@ -1567,7 +1567,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     const mode = route.query.mode === "pro" ? "pro" : "easy";
     const isPro = mode === "pro";
     const { state, inputLetter, backspace, submit, reset } = useWordle();
-    const remaining = ref(180);
+    const remaining = ref(120);
     let timerId = null;
     const dangerActive = computed(() => isPro && state.status === "playing" && remaining.value <= 10 && remaining.value > 0);
     function formatTime(s) {
@@ -1584,7 +1584,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     function startTimer() {
       if (!isPro) return;
       stopTimer();
-      remaining.value = 180;
+      remaining.value = 120;
       timerId = setInterval();
     }
     function onKey(key) {
@@ -1600,25 +1600,25 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       if (isPro) startTimer();
     }
     return (_ctx, _push, _parent, _attrs) => {
-      _push(`<div${ssrRenderAttrs(mergeProps({ class: "flex flex-col items-center px-4 pt-6 safe-bottom" }, _attrs))} data-v-24e24bfb><header class="w-full max-w-xl flex items-center justify-between mb-4" data-v-24e24bfb><div class="flex items-center gap-3" data-v-24e24bfb><button class="text-sm bg-absent hover:bg-gray-600 px-2 py-1 rounded" data-v-24e24bfb>Menu</button><h1 class="text-xl sm:text-2xl font-extrabold tracking-wide" data-v-24e24bfb>Wordle</h1>`);
+      _push(`<div${ssrRenderAttrs(mergeProps({ class: "flex flex-col items-center px-4 pt-6 safe-bottom" }, _attrs))} data-v-9ee99213><header class="w-full max-w-xl flex items-center justify-between mb-4" data-v-9ee99213><div class="flex items-center gap-3" data-v-9ee99213><button class="text-sm bg-absent hover:bg-gray-600 px-2 py-1 rounded" data-v-9ee99213>Menu</button><h1 class="text-xl sm:text-2xl font-extrabold tracking-wide" data-v-9ee99213>Wordle</h1>`);
       if (isPro) {
-        _push(`<span class="ml-2 text-sm px-2 py-1 rounded bg-absent text-white" data-v-24e24bfb>PRO</span>`);
+        _push(`<span class="ml-2 text-sm px-2 py-1 rounded bg-absent text-white" data-v-9ee99213>PRO</span>`);
       } else {
         _push(`<!---->`);
       }
-      _push(`</div><div class="flex items-center gap-3" data-v-24e24bfb>`);
+      _push(`</div><div class="flex items-center gap-3" data-v-9ee99213>`);
       if (isPro) {
-        _push(`<div class="${ssrRenderClass([unref(dangerActive) ? "bg-red-600 text-white border-red-500 animate-pulse" : "bg-tile text-gray-100 border-gray-700", "text-lg font-mono tabular-nums px-2 py-1 rounded border"])}" data-v-24e24bfb>${ssrInterpolate(formatTime(unref(remaining)))}</div>`);
+        _push(`<div class="${ssrRenderClass([unref(dangerActive) ? "bg-red-600 text-white border-red-500 animate-pulse" : "bg-tile text-gray-100 border-gray-700", "text-lg font-mono tabular-nums px-2 py-1 rounded border"])}" data-v-9ee99213>${ssrInterpolate(formatTime(unref(remaining)))}</div>`);
       } else {
         _push(`<!---->`);
       }
-      _push(`<button class="text-sm bg-correct hover:bg-green-600 px-3 py-1.5 rounded" data-v-24e24bfb>New</button></div></header><main class="w-full flex flex-col gap-4 items-center" data-v-24e24bfb>`);
+      _push(`<button class="text-sm bg-correct hover:bg-green-600 px-3 py-1.5 rounded" data-v-9ee99213>New</button></div></header><main class="w-full flex flex-col gap-4 items-center" data-v-9ee99213>`);
       _push(ssrRenderComponent(WordleBoard, {
         board: unref(state).board,
         "current-row": unref(state).currentRow
       }, null, _parent));
       if (unref(state).message) {
-        _push(`<div class="fixed top-4 left-1/2 -translate-x-1/2 bg-tile text-white px-4 py-2 rounded shadow" data-v-24e24bfb>${ssrInterpolate(unref(state).message)}</div>`);
+        _push(`<div class="fixed top-4 left-1/2 -translate-x-1/2 bg-tile text-white px-4 py-2 rounded shadow" data-v-9ee99213>${ssrInterpolate(unref(state).message)}</div>`);
       } else {
         _push(`<!---->`);
       }
@@ -1643,7 +1643,7 @@ _sfc_main.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/game.vue");
   return _sfc_setup ? _sfc_setup(props, ctx) : void 0;
 };
-const game = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-24e24bfb"]]);
+const game = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-9ee99213"]]);
 
 export { game as default };
-//# sourceMappingURL=game-DWNHvBey.mjs.map
+//# sourceMappingURL=game-B9FzQ4u5.mjs.map

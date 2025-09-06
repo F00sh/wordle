@@ -5,7 +5,7 @@ defineProps<{ board: RowResult[]; currentRow: number }>()
 </script>
 
 <template>
-  <div class="grid grid-rows-5 gap-2 w-full max-w-xs sm:max-w-sm mx-auto">
+  <div class="grid gap-2 w-full max-w-xs sm:max-w-sm mx-auto">
     <div v-for="(row, rIdx) in board" :key="rIdx" class="grid grid-cols-5 gap-2">
       <div
         v-for="(cell, cIdx) in row.letters"
@@ -23,4 +23,3 @@ defineProps<{ board: RowResult[]; currentRow: number }>()
     </div>
   </div>
 </template>
-

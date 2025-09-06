@@ -46,10 +46,10 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       }, {
         default: withCtx((_, _push2, _parent2, _scopeId) => {
           if (_push2) {
-            _push2(` Pro Mode (3 min timer) `);
+            _push2(` Pro Mode (2 min timer) `);
           } else {
             return [
-              createTextVNode(" Pro Mode (3 min timer) ")
+              createTextVNode(" Pro Mode (2 min timer) ")
             ];
           }
         }),
@@ -67,4 +67,4 @@ _sfc_main.setup = (props, ctx) => {
 };
 
 export { _sfc_main as default };
-//# sourceMappingURL=index-CA0jRPiI.mjs.map
+//# sourceMappingURL=index-BzMU1TEi.mjs.map

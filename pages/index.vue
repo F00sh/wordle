@@ -20,7 +20,7 @@
           to="/game?mode=pro"
           class="block w-full bg-present hover:bg-yellow-600 text-white font-semibold py-3 rounded-md"
         >
-          Pro Mode (3 min timer)
+        Pro Mode (2 min timer)
         </NuxtLink>
       </div>
 
@@ -30,4 +30,3 @@
     </div>
   </div>
 </template>
-

@@ -22,7 +22,7 @@ export interface WordleState {
   message: string | null
 }
 
-const ROWS = 5
+const ROWS = 6
 const COLS = 5
 
 function normalizeWord(w: string) { return w.trim().toLowerCase() }

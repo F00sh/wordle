@@ -385,12 +385,12 @@ const _routes = [
   {
     name: "game",
     path: "/game",
-    component: () => import('./game-DWNHvBey.mjs')
+    component: () => import('./game-B9FzQ4u5.mjs')
   },
   {
     name: "index",
     path: "/",
-    component: () => import('./index-CA0jRPiI.mjs')
+    component: () => import('./index-BzMU1TEi.mjs')
   }
 ];
 const ROUTE_KEY_PARENTHESES_RE = /(:\w+)\([^)]+\)/g;
