@@ -14,6 +14,7 @@ type HydrationStrategies = {
 type LazyComponent<T> = (T & DefineComponent<HydrationStrategies, {}, {}, {}, {}, {}, {}, { hydrated: () => void }>)
 
 
+export const ResultModal: typeof import("../components/ResultModal.vue")['default']
 export const WordleBoard: typeof import("../components/WordleBoard.vue")['default']
 export const WordleKeyboard: typeof import("../components/WordleKeyboard.vue")['default']
 export const NuxtWelcome: typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']
@@ -40,6 +41,7 @@ export const Html: typeof import("../node_modules/nuxt/dist/head/runtime/compone
 export const Body: typeof import("../node_modules/nuxt/dist/head/runtime/components")['Body']
 export const NuxtIsland: typeof import("../node_modules/nuxt/dist/app/components/nuxt-island")['default']
 export const NuxtRouteAnnouncer: typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']
+export const LazyResultModal: LazyComponent<typeof import("../components/ResultModal.vue")['default']>
 export const LazyWordleBoard: LazyComponent<typeof import("../components/WordleBoard.vue")['default']>
 export const LazyWordleKeyboard: LazyComponent<typeof import("../components/WordleKeyboard.vue")['default']>
 export const LazyNuxtWelcome: LazyComponent<typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']>

@@ -25,9 +25,29 @@ export interface WordleState {
 const ROWS = 5
 const COLS = 5
 
-function pickRandomWord() {
-  const idx = Math.floor(Math.random() * WORDS.length)
-  return WORDS[idx].toUpperCase()
+function normalizeWord(w: string) { return w.trim().toLowerCase() }
+
+function createDictionary(initial: string[]) {
+  const arr = ref<string[]>([...initial])
+  const set = ref(new Set(initial))
+  function addMany(words: string[]) {
+    let added = 0
+    for (const w of words.map(normalizeWord)) {
+      if (w.length !== 5 || /[^a-z]/.test(w)) continue
+      if (!set.value.has(w)) {
+        set.value.add(w)
+        arr.value.push(w)
+        added++
+      }
+    }
+    return added
+  }
+  function has(w: string) { return set.value.has(normalizeWord(w)) }
+  function randomUpper() {
+    const idx = Math.floor(Math.random() * arr.value.length)
+    return arr.value[idx].toUpperCase()
+  }
+  return { arr, set, addMany, has, randomUpper }
 }
 
 function evaluateGuess(guess: string, answer: string): LetterState[] {
@@ -69,11 +89,12 @@ function upgradeStatus(prev: Exclude<LetterState, 'empty' | 'tbd'>, next: Exclud
 
 export function useWordle() {
   const sounds = useSounds()
+  const dict = createDictionary(WORDS)
   const state = reactive<WordleState>({
     board: Array.from({ length: ROWS }, () => ({ letters: Array.from({ length: COLS }, () => ({ letter: '', state: 'empty' as LetterState })) })),
     currentRow: 0,
     currentCol: 0,
-    answer: pickRandomWord(),
+    answer: dict.randomUpper(),
     keyboard: {},
     status: 'playing',
     message: null
@@ -107,7 +128,7 @@ export function useWordle() {
     if (state.status !== 'playing') return
     if (state.currentCol < COLS) { sounds.error(); return toast('Not enough letters') }
     const guess = state.board[state.currentRow].letters.map(c => c.letter).join('')
-    if (!WORDS.includes(guess.toLowerCase())) {
+    if (!dict.has(guess)) {
       sounds.error()
       return toast('Not in word list')
     }
@@ -147,7 +168,7 @@ export function useWordle() {
     state.board = Array.from({ length: ROWS }, () => ({ letters: Array.from({ length: COLS }, () => ({ letter: '', state: 'empty' as LetterState })) }))
     state.currentRow = 0
     state.currentCol = 0
-    state.answer = randomize ? pickRandomWord() : state.answer
+    state.answer = randomize ? dict.randomUpper() : state.answer
     state.keyboard = {}
     state.status = 'playing'
     state.message = null
@@ -159,7 +180,25 @@ export function useWordle() {
     if (/^[a-zA-Z]$/.test(e.key)) return inputLetter(e.key)
   }
 
-  onMounted(() => window.addEventListener('keydown', handleKeydown))
+  async function loadExtraWords() {
+    try {
+      const res = await fetch('/words5.txt')
+      if (res.ok) {
+        const text = await res.text()
+        const extra = text.split(/\r?\n/).map(s => s.trim()).filter(Boolean)
+        const added = dict.addMany(extra)
+        // If current dictionary was very small and we are still on first round, optionally re-roll
+        if (added > 0 && state.board.every(r => r.letters.every(c => c.state === 'empty'))) {
+          state.answer = dict.randomUpper()
+        }
+      }
+    } catch {}
+  }
+
+  onMounted(() => {
+    window.addEventListener('keydown', handleKeydown)
+    loadExtraWords()
+  })
   onBeforeUnmount(() => window.removeEventListener('keydown', handleKeydown))
 
   return { state, inputLetter, backspace, submit, reset }

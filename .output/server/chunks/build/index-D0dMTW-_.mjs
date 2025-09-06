@@ -1,4 +1,4 @@
-import { defineComponent, mergeProps, unref, reactive, useSSRContext } from 'vue';
+import { defineComponent, mergeProps, unref, reactive, ref, useSSRContext } from 'vue';
 import { ssrRenderAttrs, ssrRenderComponent, ssrInterpolate, ssrRenderList, ssrRenderClass, ssrRenderTeleport } from 'vue/server-renderer';
 import { _ as _export_sfc } from './server.mjs';
 import '../_/nitro.mjs';
@@ -65,14 +65,14 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
       ["ENTER", ..."ZXCVBNM".split(""), "⌫"]
     ];
     return (_ctx, _push, _parent, _attrs) => {
-      _push(`<div${ssrRenderAttrs(mergeProps({ class: "w-full max-w-xl mx-auto mt-4 sm:mt-6 select-none" }, _attrs))}><div class="flex flex-col gap-2"><!--[-->`);
+      _push(`<div${ssrRenderAttrs(mergeProps({ class: "w-full max-w-xl mx-auto mt-5 sm:mt-6 select-none" }, _attrs))}><div class="flex flex-col gap-2"><!--[-->`);
       ssrRenderList(rows, (row, idx) => {
-        _push(`<div class="flex gap-1 justify-center"><!--[-->`);
+        _push(`<div class="flex gap-1.5 sm:gap-1 justify-center"><!--[-->`);
         ssrRenderList(row, (key) => {
           _push(`<button class="${ssrRenderClass([[
             key.length > 1 ? "flex-[1.5]" : "",
             props.keyState[key]?.toString() === "correct" ? "bg-correct text-white" : props.keyState[key]?.toString() === "present" ? "bg-present text-white" : props.keyState[key]?.toString() === "absent" ? "bg-absent text-white" : "bg-tile text-gray-100"
-          ], "px-2 sm:px-3 py-2 sm:py-3 rounded font-semibold text-xs sm:text-sm uppercase flex-1 basis-0"])}">${ssrInterpolate(key)}</button>`);
+          ], "px-3 sm:px-3 py-3.5 sm:py-2.5 rounded-md font-semibold text-base sm:text-sm uppercase flex-1 basis-0 min-h-[48px] sm:min-h-[40px]"])}">${ssrInterpolate(key)}</button>`);
         });
         _push(`<!--]--></div>`);
       });
@@ -629,28 +629,63 @@ function tone(freq, durationMs, type = "sine", gain = 0.05) {
   return;
 }
 function useSounds() {
+  const canVibrate = false;
+  const vibrate = (pattern) => {
+    try {
+      if (canVibrate) ;
+    } catch {
+    }
+  };
   function click() {
+    vibrate();
   }
   function backspace() {
+    vibrate();
   }
   function error() {
     setTimeout(() => tone(120, 120, "sawtooth", 0.05), 120);
+    vibrate();
   }
   function win() {
     const seq = [523.25, 659.25, 783.99, 1046.5];
     seq.forEach((f, i) => setTimeout(() => tone(f, 140, "sine", 0.06), i * 120));
+    vibrate();
   }
   function lose() {
     const seq = [440, 349.23, 261.63];
     seq.forEach((f, i) => setTimeout(() => tone(f, 180, "triangle", 0.06), i * 170));
+    vibrate();
   }
   return { click, backspace, error, win, lose };
 }
 const ROWS = 5;
 const COLS = 5;
-function pickRandomWord() {
-  const idx = Math.floor(Math.random() * WORDS.length);
-  return WORDS[idx].toUpperCase();
+function normalizeWord(w) {
+  return w.trim().toLowerCase();
+}
+function createDictionary(initial) {
+  const arr = ref([...initial]);
+  const set = ref(new Set(initial));
+  function addMany(words) {
+    let added = 0;
+    for (const w of words.map(normalizeWord)) {
+      if (w.length !== 5 || /[^a-z]/.test(w)) continue;
+      if (!set.value.has(w)) {
+        set.value.add(w);
+        arr.value.push(w);
+        added++;
+      }
+    }
+    return added;
+  }
+  function has(w) {
+    return set.value.has(normalizeWord(w));
+  }
+  function randomUpper() {
+    const idx = Math.floor(Math.random() * arr.value.length);
+    return arr.value[idx].toUpperCase();
+  }
+  return { arr, set, addMany, has, randomUpper };
 }
 function evaluateGuess(guess, answer) {
   const res = Array(COLS).fill("absent");
@@ -683,11 +718,12 @@ function upgradeStatus(prev, next) {
 }
 function useWordle() {
   const sounds = useSounds();
+  const dict = createDictionary(WORDS);
   const state = reactive({
     board: Array.from({ length: ROWS }, () => ({ letters: Array.from({ length: COLS }, () => ({ letter: "", state: "empty" })) })),
     currentRow: 0,
     currentCol: 0,
-    answer: pickRandomWord(),
+    answer: dict.randomUpper(),
     keyboard: {},
     status: "playing",
     message: null
@@ -702,6 +738,7 @@ function useWordle() {
     cell.letter = ch;
     cell.state = "tbd";
     state.currentCol++;
+    sounds.click();
   }
   function backspace() {
     if (state.status !== "playing") return;
@@ -710,6 +747,7 @@ function useWordle() {
     const cell = state.board[state.currentRow].letters[state.currentCol];
     cell.letter = "";
     cell.state = "empty";
+    sounds.backspace();
   }
   function submit() {
     if (state.status !== "playing") return;
@@ -718,7 +756,7 @@ function useWordle() {
       return toast("Not enough letters");
     }
     const guess = state.board[state.currentRow].letters.map((c) => c.letter).join("");
-    if (!WORDS.includes(guess.toLowerCase())) {
+    if (!dict.has(guess)) {
       sounds.error();
       return toast("Not in word list");
     }
@@ -752,7 +790,7 @@ function useWordle() {
     state.board = Array.from({ length: ROWS }, () => ({ letters: Array.from({ length: COLS }, () => ({ letter: "", state: "empty" })) }));
     state.currentRow = 0;
     state.currentCol = 0;
-    state.answer = randomize ? pickRandomWord() : state.answer;
+    state.answer = randomize ? dict.randomUpper() : state.answer;
     state.keyboard = {};
     state.status = "playing";
     state.message = null;
@@ -804,4 +842,4 @@ _sfc_main.setup = (props, ctx) => {
 const index = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-856fd8e3"]]);
 
 export { index as default };
-//# sourceMappingURL=index-CJZhnnx7.mjs.map
+//# sourceMappingURL=index-D0dMTW-_.mjs.map

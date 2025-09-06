@@ -54,27 +54,35 @@ function chord(freqs: number[], durationMs: number, type: OscillatorType = 'sine
 }
 
 export function useSounds() {
+  const canVibrate = typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function'
+  const vibrate = (pattern: number | number[]) => {
+    try { if (canVibrate) navigator.vibrate(pattern as any) } catch {}
+  }
   function click() {
     // short high tick
     tone(1400, 35, 'triangle', 0.03)
+    vibrate(8)
   }
   function backspace() {
     tone(220, 45, 'square', 0.03)
+    vibrate(10)
   }
   function error() {
     tone(160, 120, 'sawtooth', 0.05)
     setTimeout(() => tone(120, 120, 'sawtooth', 0.05), 120)
+    vibrate([20, 40, 20])
   }
   function win() {
     // simple upbeat arpeggio C-E-G-C
     const seq = [523.25, 659.25, 783.99, 1046.5]
     seq.forEach((f, i) => setTimeout(() => tone(f, 140, 'sine', 0.06), i * 120))
+    vibrate([15, 25, 15, 25, 20])
   }
   function lose() {
     // descending tones
     const seq = [440, 349.23, 261.63]
     seq.forEach((f, i) => setTimeout(() => tone(f, 180, 'triangle', 0.06), i * 170))
+    vibrate([40, 40, 40])
   }
   return { click, backspace, error, win, lose }
 }
-
